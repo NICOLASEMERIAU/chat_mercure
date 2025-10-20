@@ -1,3 +1,10 @@
+# TUTO PERSO
+Crée un fichier .env avec 
+APP_ENV=dev
+APP_SECRET=
+puis lance docker
+
+puis make bash pour aller dans le terminal du docker
 # Symfony Docker
 
 A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
