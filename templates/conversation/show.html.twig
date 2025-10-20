@@ -14,9 +14,12 @@
                     <div class="overflow-y-auto"
                          id="messages"
                          style="max-height: 500px;">
+
+                        {% include 'conversation/messages.html.twig' %}
+
                     </div>
                     <hr>
-                    <form class="d-flex gap-3 mt-3 hx-post="{{ path('message.create') }} hx-swap="none">
+                    <form class="d-flex gap-3 mt-3" hx-post="{{ path('message.create') }}" hx-swap="none">
                         <input aria-label="Message"
                                 type="text"
                                 class="form-control"
