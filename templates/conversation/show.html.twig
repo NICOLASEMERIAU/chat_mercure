@@ -11,8 +11,12 @@
                     Messages
                 </div>
                 <div class="card-body">
+
                     <div class="overflow-y-auto"
                          id="messages"
+                         hx-ext="sse"
+                         sse-connect="{{ mercure(topic) }}"
+                         sse-swap="message"
                          style="max-height: 500px;">
 
                         {% include 'conversation/messages.html.twig' %}
@@ -39,4 +43,30 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const messages = document.querySelector('#messages');
+        const userId = {{ app.user.id }};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            scrollToBottom(messages)
+        });
+
+        document.body.addEventListener('htmx:sseBeforeMessage', function (e) {
+            e.preventDefault();
+
+            const json = e.detail.data;
+
+            console.log(json);
+            });
+
+        function scrollToBottom(container) {
+            container.scrollTo({
+                top: container.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    </script>
 {% endblock %}
