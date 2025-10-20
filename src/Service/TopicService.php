@@ -24,7 +24,7 @@ class TopicService
         $host = $request->getHost();
         $port = $request->getPort();
 
-        $portUrl = $port ? ":{$port}" : '';
+        $portUrl = $port ? ":$port" : '';
 
         return $scheme . '://' . $host . $portUrl;
     }

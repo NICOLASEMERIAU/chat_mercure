@@ -46,6 +46,8 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
+
     <script>
         const messages = document.querySelector('#messages');
         const userId = {{ app.user.id }};
@@ -57,10 +59,20 @@
         document.body.addEventListener('htmx:sseBeforeMessage', function (e) {
             e.preventDefault();
 
-            const json = e.detail.data;
+            const json = JSON.parse(e.detail.data);
+            const authorId = json['authorId'];
+            const content = json['content'];
 
-            console.log(json);
+            if (authorId === userId) {
+                document.querySelector('#content').value = '';
+            }
+
+            htmx.swap('#messages', `<message-element author-id="${authorId}" user-id="${userId}" content="${content}"></message-element>`, {
+                swapStyle: 'beforeend'
             });
+
+            scrollToBottom(messages);
+        });
 
         function scrollToBottom(container) {
             container.scrollTo({

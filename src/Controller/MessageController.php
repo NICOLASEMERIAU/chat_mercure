@@ -22,8 +22,8 @@ final class MessageController extends AbstractController
     public function __construct(
         private readonly ConversationRepository $conversationRepository,
         private readonly MessageFactory         $factory,
-        private readonly HubInterface $hub,
-        private readonly TopicService            $topicService,
+        private readonly HubInterface           $hub,
+        private readonly TopicService           $topicService,
     )
     {
 

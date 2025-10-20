@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Conversation;
 use App\Entity\User;
 use App\Factory\ConversationFactory;
 use App\Repository\ConversationRepository;
-use App\Repository\UserRepository;
 use App\Service\TopicService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,8 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Authorization;
 use Symfony\Component\Mercure\Discovery;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method User|null getUser()
@@ -53,7 +49,7 @@ final class ConversationController extends AbstractController
         return $this->render('conversation/show.html.twig', [
             'conversation' => $conversation,
             'recipient' => $recipient,
-            'topic' => $this->topicService->getTopicUrl($conversation),
+            'topic' => $topic,
 
         ]);
     }
