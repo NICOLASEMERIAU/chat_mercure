@@ -24,7 +24,7 @@ class UserService
      */
     public function findAll(): array
     {
-        return $this->userRepository->findAll();
+        return $this->userRepository->findBy([], ['username' => 'ASC']);
     }
 
     /**

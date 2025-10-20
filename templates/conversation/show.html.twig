@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversation avec {{ recipient.username }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar des conversations -->
+        <div class="col-md-3 col-lg-2 bg-light p-3">
+            <h5 class="mb-3">💬 Conversations</h5>
+            <div class="list-group">
+                {% for user in user_service.findAll() %}
+                    {% if not app.user or user.id != app.user.id %}
+                        <a href="{{ path('conversation_show', {'recipient': user.id}) }}" 
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center
+                                  {{ user.id == recipient.id ? 'active' : '' }}">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                     style="width: 32px; height: 32px; font-size: 14px;">
+                                    {{ user.username|slice(0, 1)|upper }}
+                                </div>
+                                <span>{{ user.username }}</span>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">0</span>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Zone de conversation principale -->
+        <div class="col-md-9 col-lg-10 d-flex flex-column" style="height: calc(100vh - 76px);">
+            <!-- En-tête de la conversation -->
+            <div class="bg-white border-bottom p-3 d-flex align-items-center">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                     style="width: 40px; height: 40px;">
+                    {{ recipient.username|slice(0, 1)|upper }}
+                </div>
+                <div>
+                    <h5 class="mb-0">{{ recipient.username }}</h5>
+                    <small class="text-muted">En ligne</small>
+                </div>
+                <div class="ms-auto">
+                    <button class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Zone des messages -->
+            <div class="flex-grow-1 p-3 overflow-auto" id="messagesContainer" style="background-color: #f8f9fa;">
+                <div class="d-flex flex-column gap-3">
+                    <!-- Message exemple (à remplacer par les vrais messages) -->
+                    <div class="d-flex justify-content-start">
+                        <div class="bg-white rounded-3 p-3 shadow-sm" style="max-width: 70%;">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="text-primary me-2">{{ recipient.username }}</strong>
+                                <small class="text-muted">14:30</small>
+                            </div>
+                            <p class="mb-0">Salut ! Comment ça va ?</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <div class="bg-primary text-white rounded-3 p-3 shadow-sm" style="max-width: 70%;">
+                            <div class="d-flex align-items-center mb-1">
+                                <small class="text-white-50 me-2">14:32</small>
+                                <strong class="text-white">{{ app.user.username }}</strong>
+                            </div>
+                            <p class="mb-0">Ça va bien merci ! Et toi ?</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <div class="bg-white rounded-3 p-3 shadow-sm" style="max-width: 70%;">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="text-primary me-2">{{ recipient.username }}</strong>
+                                <small class="text-muted">14:35</small>
+                            </div>
+                            <p class="mb-0">Très bien aussi ! On se voit bientôt ?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone de saisie de message -->
+            <div class="bg-white border-top p-3">
+                <form id="messageForm" class="d-flex gap-2">
+                    <div class="flex-grow-1">
+                        <input type="text" 
+                               class="form-control" 
+                               id="messageInput" 
+                               placeholder="Tapez votre message..." 
+                               autocomplete="off">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script pour le scroll automatique et la gestion des messages -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const messagesContainer = document.getElementById('messagesContainer');
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+
+    // Scroll automatique vers le bas
+    function scrollToBottom() {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Scroll initial
+    scrollToBottom();
+
+    // Gestion de l'envoi de message
+    messageForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const message = messageInput.value.trim();
+        
+        if (message) {
+            // Ici on enverra le message via AJAX
+            console.log('Message envoyé:', message);
+            messageInput.value = '';
+            scrollToBottom();
+        }
+    });
+
+    // Envoi avec Enter
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            messageForm.dispatchEvent(new Event('submit'));
+        }
+    });
+});
+</script>
+{% endblock %}

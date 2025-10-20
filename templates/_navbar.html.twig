@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">Chat Mercure</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        👥 Utilisateurs
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="usersDropdown">
+                        {% set allUsers = user_service.findAll() %}
+                        {% set otherUsers = [] %}
+                        {% for user in allUsers %}
+                            {% if not app.user or user.id != app.user.id %}
+                                {% set otherUsers = otherUsers|merge([user]) %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% for user in otherUsers %}
+                            <li>
+                                <a class="dropdown-item" href="{{ path('conversation_show', {'recipient': user.id}) }}">
+                                    👤 {{ user.username }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        {% if otherUsers|length == 0 %}
+                            <li><span class="dropdown-item-text text-muted">Aucun autre utilisateur</span></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            👤 {{ app.user.username }}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Mon profil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{{ path('_logout_main') }}" class="d-inline">
+                                    <button type="submit" class="dropdown-item text-danger">🚪 Déconnexion</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

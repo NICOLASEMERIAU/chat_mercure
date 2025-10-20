@@ -15,6 +15,14 @@ class Conversation
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $sender = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $recipient = null;
+
     /**
      * @var Collection<int, User>
      */
@@ -36,6 +44,30 @@ class Conversation
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getSender(): ?User
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?User $sender): static
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getRecipient(): ?User
+    {
+        return $this->recipient;
+    }
+
+    public function setRecipient(?User $recipient): static
+    {
+        $this->recipient = $recipient;
+
+        return $this;
     }
 
     /**
